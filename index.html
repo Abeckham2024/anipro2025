@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>アニプロ2025フォトフレーム</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <!-- A-Frame & AR.js -->
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.rawgit.com/jeromeetienne/ar.js/2.2.1/aframe/build/aframe-ar.min.js"></script>
+
+    <!-- html2canvas for screenshot -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+      body { margin: 0; overflow: hidden; }
+      #captureBtn {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        z-index: 999;
+        padding: 10px 16px;
+        font-size: 16px;
+        background-color: #ff4081;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- 撮影ボタン -->
+    <button id="captureBtn">📸 撮影</button>
+
+    <!-- ARシーン -->
+    <a-scene embedded arjs>
+      <!-- オリジナルマーカーの指定 -->
+      <a-marker type="pattern" url="pattern-marker.patt">
+        <!-- フォトフレーム画像（frame.png） -->
+        <a-image src="frame.png"
+                 position="0 0 0"
+                 rotation="-90 0 0"
+                 width="1"
+                 height="0.7">
+        </a-image>
+      </a-marker>
+
+      <!-- カメラ -->
+      <a-entity camera></a-entity>
+    </a-scene>
+
+    <!-- 撮影処理 -->
+    <script>
+      document.getElementById('captureBtn').addEventListener('click', () => {
+        const scene = document.querySelector('a-scene');
+        html2canvas(scene).then(canvas => {
+          const link = document.createElement('a');
+          link.download = 'photo.png';
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+        });
+      });
+    </script>
+
+  </body>
+</html>
